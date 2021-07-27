@@ -64,12 +64,18 @@ func (client *Client) header(req *http.Request) {
 
 // 向哔咔发送POST请求
 func (client *Client) postToPica(path string, body interface{}) ([]byte, error) {
-	bodyBuff, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
+	var req *http.Request
+	var err error
+	if body == nil {
+		req, err = http.NewRequest("POST", server+path, nil)
+	} else {
+		bodyBuff, err := json.Marshal(body)
+		if err != nil {
+			return nil, err
+		}
+		bodyStream := bytes.NewBuffer(bodyBuff)
+		req, err = http.NewRequest("POST", server+path, bodyStream)
 	}
-	bodyStream := bytes.NewBuffer(bodyBuff)
-	req, err := http.NewRequest("POST", server+path, bodyStream)
 	if err != nil {
 		return nil, err
 	}
@@ -153,106 +159,164 @@ func (client *Client) Categories() ([]Category, error) {
 }
 
 // CategoryComics 分类下的漫画
-func (client *Client) CategoryComics(category string, sort string, page int) (ComicsPage, error) {
+func (client *Client) CategoryComics(category string, sort string, page int) (*ComicsPage, error) {
 	buff, err := client.getToPica("comics?c=" + url.QueryEscape(category) + "&s=" + sort + "&page=" + strconv.Itoa(page))
 	if err != nil {
-		return ComicsPage{}, err
+		return nil, err
 	}
 	var comicsResponse ComicsResponse
 	err = json.Unmarshal(buff, &comicsResponse)
 	if err != nil {
-		return ComicsPage{}, err
+		return nil, err
 	}
-	return comicsResponse.Data.Comics, nil
+	return &comicsResponse.Data.Comics, nil
 }
 
 // SearchComics 搜索漫画
-func (client *Client) SearchComics(keyword string, sort string, page int) (ComicsPage, error) {
+func (client *Client) SearchComics(keyword string, sort string, page int) (*ComicsPage, error) {
 	params := map[string]string{}
 	params["keyword"] = keyword
 	params["sort"] = sort
 	buff, err := client.postToPica("comics/advanced-search?page="+strconv.Itoa(page), params)
 	if err != nil {
-		return ComicsPage{}, err
+		return nil, err
 	}
 	var comicsResponse ComicsResponse
 	err = json.Unmarshal(buff, &comicsResponse)
 	if err != nil {
-		return ComicsPage{}, err
+		return nil, err
 	}
-	return comicsResponse.Data.Comics, nil
+	return &comicsResponse.Data.Comics, nil
 }
 
 // SearchComicsInCategories 搜索漫画
-func (client *Client) SearchComicsInCategories(keyword string, sort string, page int, categories []string) (ComicsPage, error) {
+func (client *Client) SearchComicsInCategories(keyword string, sort string, page int, categories []string) (*ComicsPage, error) {
 	params := map[string]interface{}{}
 	params["categories"] = categories
 	params["keyword"] = keyword
 	params["sort"] = sort
 	buff, err := client.postToPica("comics/advanced-search?page="+strconv.Itoa(page), params)
 	if err != nil {
-		return ComicsPage{}, err
+		return nil, err
 	}
 	var comicsResponse ComicsResponse
 	err = json.Unmarshal(buff, &comicsResponse)
 	if err != nil {
-		return ComicsPage{}, err
+		return nil, err
 	}
-	return comicsResponse.Data.Comics, nil
+	return &comicsResponse.Data.Comics, nil
 }
 
 // ComicInfo 漫画详情
-func (client *Client) ComicInfo(comicId string) (ComicInfo, error) {
+func (client *Client) ComicInfo(comicId string) (*ComicInfo, error) {
 	buff, err := client.getToPica("comics/" + comicId)
 	if err != nil {
-		return ComicInfo{}, err
+		return nil, err
 	}
 	var comicInfoResponse ComicInfoResponse
 	err = json.Unmarshal(buff, &comicInfoResponse)
 	if err != nil {
-		return ComicInfo{}, err
+		return nil, err
 	}
-	return comicInfoResponse.Data.Comic, nil
+	return &comicInfoResponse.Data.Comic, nil
 }
 
 // ComicEpPage 漫画EP信息
-func (client *Client) ComicEpPage(comicId string, page int) (EpPage, error) {
+func (client *Client) ComicEpPage(comicId string, page int) (*EpPage, error) {
 	buff, err := client.getToPica("comics/" + comicId + "/eps?page=" + strconv.Itoa(page))
 	if err != nil {
-		return EpPage{}, err
+		return nil, err
 	}
 	var epPageResponse EpPageResponse
 	err = json.Unmarshal(buff, &epPageResponse)
 	if err != nil {
-		return EpPage{}, err
+		return nil, err
 	}
-	return epPageResponse.Data.Eps, nil
+	return &epPageResponse.Data.Eps, nil
 }
 
 // ComicPicturePage 漫画图片
-func (client *Client) ComicPicturePage(comicId string, epOrder int, page int) (ComicPicturePage, error) {
+func (client *Client) ComicPicturePage(comicId string, epOrder int, page int) (*ComicPicturePage, error) {
 	buff, err := client.getToPica("comics/" + comicId + "/order/" + strconv.Itoa(epOrder) + "/pages?page=" + strconv.Itoa(page))
 	if err != nil {
-		return ComicPicturePage{}, err
+		return nil, err
 	}
 	var epPageResponse ComicPicturePageResponse
 	err = json.Unmarshal(buff, &epPageResponse)
 	if err != nil {
-		return ComicPicturePage{}, err
+		return nil, err
 	}
-	return epPageResponse.Data.Pages, nil
+	return &epPageResponse.Data.Pages, nil
 }
 
 // ComicPicturePageWithQuality 漫画图片
-func (client *Client) ComicPicturePageWithQuality(comicId string, epOrder int, page int, quality string) (ComicPicturePage, error) {
+func (client *Client) ComicPicturePageWithQuality(comicId string, epOrder int, page int, quality string) (*ComicPicturePage, error) {
 	buff, err := client.getToPicaWithQuality("comics/"+comicId+"/order/"+strconv.Itoa(epOrder)+"/pages?page="+strconv.Itoa(page), quality)
 	if err != nil {
-		return ComicPicturePage{}, err
+		return nil, err
 	}
 	var epPageResponse ComicPicturePageResponse
 	err = json.Unmarshal(buff, &epPageResponse)
 	if err != nil {
-		return ComicPicturePage{}, err
+		return nil, err
 	}
-	return epPageResponse.Data.Pages, nil
+	return &epPageResponse.Data.Pages, nil
+}
+
+// SwitchLike (取消)收藏漫画
+// 第一次收藏，第二次是取消收藏 action是最终结果
+func (client *Client) SwitchLike(comicId string) (*string, error) {
+	buff, err := client.postToPica("comics/"+comicId+"/like", nil)
+	if err != nil {
+		return nil, err
+	}
+	var actionResponse ActionResponse
+	err = json.Unmarshal(buff, &actionResponse)
+	if err != nil {
+		return nil, err
+	}
+	return &actionResponse.Data.Action, nil
+}
+
+// SwitchFavourite (取消)收藏漫画
+// 第一次收藏，第二次是取消收藏 action是最终结果
+func (client *Client) SwitchFavourite(comicId string) (*string, error) {
+	buff, err := client.postToPica("comics/"+comicId+"/favourite", nil)
+	if err != nil {
+		return nil, err
+	}
+	var actionResponse ActionResponse
+	err = json.Unmarshal(buff, &actionResponse)
+	if err != nil {
+		return nil, err
+	}
+	return &actionResponse.Data.Action, nil
+}
+
+// FavouriteComics 收藏的漫画
+func (client *Client) FavouriteComics(sort string, page int) (*ComicsPage, error) {
+	buff, err := client.getToPica("users/favourite?s=" + sort + "&page=" + strconv.Itoa(page))
+	if err != nil {
+		return nil, err
+	}
+	var comicsResponse ComicsResponse
+	err = json.Unmarshal(buff, &comicsResponse)
+	if err != nil {
+		return nil, err
+	}
+	return &comicsResponse.Data.Comics, nil
+}
+
+// UserProfile 用户信息
+func (client *Client) UserProfile() (*UserProfile, error) {
+	buff, err := client.getToPica("users/profile")
+	if err != nil {
+		return nil, err
+	}
+	var userProfileResponse UserProfileResponse
+	err = json.Unmarshal(buff, &userProfileResponse)
+	if err != nil {
+		return nil, err
+	}
+	return &userProfileResponse.Data.User, nil
 }

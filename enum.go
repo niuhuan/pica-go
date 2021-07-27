@@ -11,3 +11,9 @@ const ImageQualityLow = "low"
 const ImageQualityMedium = "medium"
 const ImageQualityHigh = "high"
 
+const ActionLink = "like"
+const ActionUnlike = "unlike"
+
+const ActionFavourite = "favourite"
+const ActionUnFavourite = "un_favourite"
+

@@ -148,3 +148,30 @@ type ComicPicture struct {
 	Media Image  `json:"media"`
 	Id    string `json:"_id"`
 }
+
+type ActionResponse struct {
+	Data struct {
+		Action string `json:"action"`
+	} `json:"data"`
+}
+
+type UserProfileResponse struct {
+	Data struct {
+		User UserProfile `json:"user"`
+	} `json:"data"`
+}
+
+type UserProfile struct {
+	Id         string        `json:"_id"`
+	Birthday   string        `json:"birthday"`
+	Email      string        `json:"email"`
+	Gender     string        `json:"gender"`
+	Name       string        `json:"name"`
+	Title      string        `json:"title"`
+	Verified   bool          `json:"verified"`
+	Exp        int           `json:"exp"`
+	Level      int           `json:"level"`
+	Characters []interface{} `json:"characters"`
+	CreatedAt  string        `json:"created_at"`
+	IsPunched  bool          `json:"isPunched"`
+}

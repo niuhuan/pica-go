@@ -13,6 +13,7 @@ PIKA API
   - [x] 搜索
   - [x] EP
   - [x] 获取图片
+  - [x] 收藏
 - [x] 网络
   - [x] 分流 / 代理 (examples)
 

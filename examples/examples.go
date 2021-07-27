@@ -97,7 +97,7 @@ func ExampleCategoryComics(client *pica.Client) {
 	if err != nil {
 		panic(err)
 	}
-	buff, _ := json.Marshal(&comicPage)
+	buff, _ := json.Marshal(comicPage)
 	println(string(buff))
 }
 
@@ -108,7 +108,7 @@ func ExampleComicInfo(client *pica.Client) {
 	if err != nil {
 		panic(err)
 	}
-	buff, _ := json.Marshal(&c)
+	buff, _ := json.Marshal(c)
 	println(string(buff))
 }
 
@@ -119,7 +119,7 @@ func ExampleComicEpPage(client *pica.Client) {
 	if err != nil {
 		panic(err)
 	}
-	buff, _ := json.Marshal(&c)
+	buff, _ := json.Marshal(c)
 	println(string(buff))
 }
 
@@ -130,7 +130,7 @@ func ExampleComicPicturePage(client *pica.Client) {
 	if err != nil {
 		panic(err)
 	}
-	buff, _ := json.Marshal(&c)
+	buff, _ := json.Marshal(c)
 	println(string(buff))
 }
 
@@ -141,7 +141,7 @@ func ExampleComicPicturePageWithQuality(client *pica.Client) {
 	if err != nil {
 		panic(err)
 	}
-	buff, _ := json.Marshal(&c)
+	buff, _ := json.Marshal(c)
 	println(string(buff))
 }
 
@@ -152,6 +152,6 @@ func ExampleSearchComics(client *pica.Client) {
 	if err != nil {
 		panic(err)
 	}
-	buff, _ := json.Marshal(&comicPage)
+	buff, _ := json.Marshal(comicPage)
 	println(string(buff))
 }
