@@ -8,9 +8,11 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -144,6 +146,20 @@ func (client *Client) Login(username string, password string) error {
 	return nil
 }
 
+// UserProfile 用户信息
+func (client *Client) UserProfile() (*UserProfile, error) {
+	buff, err := client.getToPica("users/profile")
+	if err != nil {
+		return nil, err
+	}
+	var userProfileResponse UserProfileResponse
+	err = json.Unmarshal(buff, &userProfileResponse)
+	if err != nil {
+		return nil, err
+	}
+	return &userProfileResponse.Data.User, nil
+}
+
 // Categories 获取分类
 func (client *Client) Categories() ([]Category, error) {
 	buff, err := client.getToPica("categories")
@@ -158,9 +174,14 @@ func (client *Client) Categories() ([]Category, error) {
 	return categoriesResponse.Data.Categories, nil
 }
 
-// CategoryComics 分类下的漫画
-func (client *Client) CategoryComics(category string, sort string, page int) (*ComicsPage, error) {
-	buff, err := client.getToPica("comics?c=" + url.QueryEscape(category) + "&s=" + sort + "&page=" + strconv.Itoa(page))
+// Comics 分类下的漫画
+// category 为空字符串则为所有分类
+func (client *Client) Comics(category string, sort string, page int) (*ComicsPage, error) {
+	mUrl := "comics?"
+	if len(category) > 0 {
+		mUrl = mUrl + fmt.Sprintf("c=%s&", url.QueryEscape(category))
+	}
+	buff, err := client.getToPica(mUrl + "s=" + sort + "&page=" + strconv.Itoa(page))
 	if err != nil {
 		return nil, err
 	}
@@ -173,10 +194,14 @@ func (client *Client) CategoryComics(category string, sort string, page int) (*C
 }
 
 // SearchComics 搜索漫画
-func (client *Client) SearchComics(keyword string, sort string, page int) (*ComicsPage, error) {
-	params := map[string]string{}
-	params["keyword"] = keyword
-	params["sort"] = sort
+func (client *Client) SearchComics(categories []string, keyword string, sort string, page int) (*ComicsPage, error) {
+	params := map[string]interface{}{
+		"keyword": keyword,
+		"sort":    sort,
+	}
+	if categories != nil && len(categories) > 0 {
+		params["categories"] = categories
+	}
 	buff, err := client.postToPica("comics/advanced-search?page="+strconv.Itoa(page), params)
 	if err != nil {
 		return nil, err
@@ -307,16 +332,49 @@ func (client *Client) FavouriteComics(sort string, page int) (*ComicsPage, error
 	return &comicsResponse.Data.Comics, nil
 }
 
-// UserProfile 用户信息
-func (client *Client) UserProfile() (*UserProfile, error) {
-	buff, err := client.getToPica("users/profile")
+// ComicCommentsPage 漫画的评论
+func (client *Client) ComicCommentsPage(comicId string, page int) (*CommentsPage, error) {
+	buff, err := client.getToPica("comics/" + comicId + "/comments?page=" + strconv.Itoa(page))
 	if err != nil {
 		return nil, err
 	}
-	var userProfileResponse UserProfileResponse
-	err = json.Unmarshal(buff, &userProfileResponse)
+	// 这里的page是字符串, 自带的json不能解析, 正则替换一下
+	p, _ := regexp.Compile("\"page\": \"(\\d+)\",")
+	buff = []byte(p.ReplaceAllString(string(buff), "\"page\": $1,"))
+	//
+	println(string(buff))
+	var commentsResponse CommentsResponse
+	err = json.Unmarshal(buff, &commentsResponse)
 	if err != nil {
 		return nil, err
 	}
-	return &userProfileResponse.Data.User, nil
+	return &commentsResponse.Data.Comments, nil
+}
+
+// ComicRecommendation 看了这个本子的也在看
+func (client *Client) ComicRecommendation(comicId string) ([]ComicSimple, error) {
+	buff, err := client.getToPica("comics/" + comicId + "/recommendation")
+	if err != nil {
+		return nil, err
+	}
+	var recommendationResponse RecommendationResponse
+	err = json.Unmarshal(buff, &recommendationResponse)
+	if err != nil {
+		return nil, err
+	}
+	return recommendationResponse.Data.Comics, nil
+}
+
+// HotKeywords 大家都在搜
+func (client *Client) HotKeywords() ([]string, error) {
+	buff, err := client.getToPica("keywords")
+	if err != nil {
+		return nil, err
+	}
+	var hotKeywordsResponse HotKeywordsResponse
+	err = json.Unmarshal(buff, &hotKeywordsResponse)
+	if err != nil {
+		return nil, err
+	}
+	return hotKeywordsResponse.Data.Keywords, nil
 }

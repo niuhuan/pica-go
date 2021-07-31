@@ -93,7 +93,7 @@ func ExampleCategories(client *pica.Client) {
 // ExampleCategoryComics (需要登录)
 // 获取分类下的漫画
 func ExampleCategoryComics(client *pica.Client) {
-	comicPage, err := client.CategoryComics("全彩", pica.SortDefault, 1)
+	comicPage, err := client.Comics("全彩", pica.SortDefault, 1)
 	if err != nil {
 		panic(err)
 	}
@@ -148,7 +148,7 @@ func ExampleComicPicturePageWithQuality(client *pica.Client) {
 // ExampleSearchComics (需要登录)
 // 搜索漫画
 func ExampleSearchComics(client *pica.Client) {
-	comicPage, err := client.SearchComics("难言之隐", pica.SortDefault, 1)
+	comicPage, err := client.SearchComics(nil, "难言之隐", pica.SortDefault, 1)
 	if err != nil {
 		panic(err)
 	}

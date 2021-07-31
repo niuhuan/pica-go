@@ -49,6 +49,27 @@ type LoginResponse struct {
 	} `json:"data"`
 }
 
+type UserProfileResponse struct {
+	Data struct {
+		User UserProfile `json:"user"`
+	} `json:"data"`
+}
+
+type UserProfile struct {
+	Id         string   `json:"_id"`
+	Birthday   string   `json:"birthday"`
+	Email      string   `json:"email"`
+	Gender     string   `json:"gender"`
+	Name       string   `json:"name"`
+	Title      string   `json:"title"`
+	Verified   bool     `json:"verified"`
+	Exp        int      `json:"exp"`
+	Level      int      `json:"level"`
+	Characters []string `json:"characters"`
+	CreatedAt  string   `json:"created_at"`
+	IsPunched  bool     `json:"isPunched"`
+}
+
 type CategoriesResponse struct {
 	Response
 	Data struct {
@@ -155,23 +176,55 @@ type ActionResponse struct {
 	} `json:"data"`
 }
 
-type UserProfileResponse struct {
+type CommentsResponse struct {
+	Response
 	Data struct {
-		User UserProfile `json:"user"`
+		Comments    CommentsPage `json:"comments"`
+		TopComments []Comment    `json:"topComments"`
 	} `json:"data"`
 }
 
-type UserProfile struct {
-	Id         string        `json:"_id"`
-	Birthday   string        `json:"birthday"`
-	Email      string        `json:"email"`
-	Gender     string        `json:"gender"`
-	Name       string        `json:"name"`
-	Title      string        `json:"title"`
-	Verified   bool          `json:"verified"`
-	Exp        int           `json:"exp"`
-	Level      int           `json:"level"`
-	Characters []interface{} `json:"characters"`
-	CreatedAt  string        `json:"created_at"`
-	IsPunched  bool          `json:"isPunched"`
+type CommentsPage struct {
+	Page
+	Docs []Comment `json:"docs"`
+}
+
+type Comment struct {
+	Id            string      `json:"_id"`
+	Content       string      `json:"content"`
+	User          CommentUser `json:"_user"`
+	Comic         string      `json:"_comic"`
+	IsTop         bool        `json:"isTop"`
+	Hide          bool        `json:"hide"`
+	CreatedAt     time.Time   `json:"created_at"`
+	LikesCount    int         `json:"likesCount"`
+	CommentsCount int         `json:"commentsCount"`
+	IsLiked       bool        `json:"isLiked"`
+}
+
+type CommentUser struct {
+	Id         string   `json:"_id"`
+	Gender     string   `json:"gender"`
+	Name       string   `json:"name"`
+	Title      string   `json:"title"`
+	Verified   bool     `json:"verified"`
+	Exp        int      `json:"exp"`
+	Level      int      `json:"level"`
+	Characters []string `json:"characters"`
+	Role       string   `json:"role"`
+	Avatar     Image    `json:"avatar"`
+}
+
+type RecommendationResponse struct {
+	Response
+	Data struct {
+		Comics []ComicSimple `json:"comics"`
+	} `json:"data"`
+}
+
+type HotKeywordsResponse struct {
+	Response
+	Data struct {
+		Keywords []string `json:"keywords"`
+	} `json:"data"`
 }
