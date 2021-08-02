@@ -22,19 +22,16 @@ type Image struct {
 	FileServer   string `json:"fileServer"`
 }
 
-type Creator struct {
+type UserBasic struct {
 	Id         string   `json:"_id"`
 	Gender     string   `json:"gender"`
 	Name       string   `json:"name"`
-	Slogan     string   `json:"slogan"`
 	Title      string   `json:"title"`
 	Verified   bool     `json:"verified"`
 	Exp        int      `json:"exp"`
 	Level      int      `json:"level"`
 	Characters []string `json:"characters"`
-	Role       string   `json:"role"`
 	Avatar     Image    `json:"avatar"`
-	Character  string   `json:"character"`
 }
 
 type LoginRequest struct {
@@ -56,18 +53,23 @@ type UserProfileResponse struct {
 }
 
 type UserProfile struct {
-	Id         string   `json:"_id"`
-	Birthday   string   `json:"birthday"`
-	Email      string   `json:"email"`
-	Gender     string   `json:"gender"`
-	Name       string   `json:"name"`
-	Title      string   `json:"title"`
-	Verified   bool     `json:"verified"`
-	Exp        int      `json:"exp"`
-	Level      int      `json:"level"`
-	Characters []string `json:"characters"`
-	CreatedAt  string   `json:"created_at"`
-	IsPunched  bool     `json:"isPunched"`
+	UserBasic
+	Birthday  string    `json:"birthday"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
+	IsPunched bool      `json:"isPunched"`
+}
+
+type PunchResponse struct {
+	Response
+	Data struct {
+		Res PunchStatus `json:"res"`
+	} `json:"data"`
+}
+
+type PunchStatus struct {
+	Status         string `json:"status"`
+	PunchInLastDay string `json:"punchInLastDay"`
 }
 
 type CategoriesResponse struct {
@@ -131,6 +133,13 @@ type ComicInfo struct {
 	IsFavourite   bool      `json:"isFavourite"`
 	IsLiked       bool      `json:"isLiked"`
 	CommentsCount int       `json:"commentsCount"`
+}
+
+type Creator struct {
+	UserBasic
+	Slogan    string `json:"slogan"`
+	Role      string `json:"role"`
+	Character string `json:"character"`
 }
 
 type EpPageResponse struct {
@@ -203,16 +212,8 @@ type Comment struct {
 }
 
 type CommentUser struct {
-	Id         string   `json:"_id"`
-	Gender     string   `json:"gender"`
-	Name       string   `json:"name"`
-	Title      string   `json:"title"`
-	Verified   bool     `json:"verified"`
-	Exp        int      `json:"exp"`
-	Level      int      `json:"level"`
-	Characters []string `json:"characters"`
-	Role       string   `json:"role"`
-	Avatar     Image    `json:"avatar"`
+	UserBasic
+	Role string `json:"role"`
 }
 
 type RecommendationResponse struct {

@@ -160,6 +160,20 @@ func (client *Client) UserProfile() (*UserProfile, error) {
 	return &userProfileResponse.Data.User, nil
 }
 
+// PunchIn 打哔卡
+func (client *Client) PunchIn() (*PunchStatus, error) {
+	buff, err := client.postToPica("users/punch-in", nil)
+	if err != nil {
+		return nil, err
+	}
+	var response PunchResponse
+	err = json.Unmarshal(buff, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response.Data.Res, nil
+}
+
 // Categories 获取分类
 func (client *Client) Categories() ([]Category, error) {
 	buff, err := client.getToPica("categories")
