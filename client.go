@@ -392,3 +392,31 @@ func (client *Client) HotKeywords() ([]string, error) {
 	}
 	return hotKeywordsResponse.Data.Keywords, nil
 }
+
+// GamePage 游戏列表
+func (client *Client) GamePage(page int) (*GamePage, error) {
+	buff, err := client.getToPica("games?page=" + strconv.Itoa(page))
+	if err != nil {
+		return nil, err
+	}
+	var response GamePageResponse
+	err = json.Unmarshal(buff, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response.Data.Games, nil
+}
+
+// GameInfo 游戏详情
+func (client *Client) GameInfo(gameId string) (*GameInfo, error) {
+	buff, err := client.getToPica("games/" + gameId)
+	if err != nil {
+		return nil, err
+	}
+	var response GameResponse
+	err = json.Unmarshal(buff, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response.Data.Game, nil
+}

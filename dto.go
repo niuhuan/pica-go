@@ -229,3 +229,52 @@ type HotKeywordsResponse struct {
 		Keywords []string `json:"keywords"`
 	} `json:"data"`
 }
+
+type GamePageResponse struct {
+	Response
+	Data struct {
+		Games GamePage `json:"games"`
+	} `json:"data"`
+}
+
+type GamePage struct {
+	Page
+	Docs []GameSimple `json:"docs"`
+}
+
+type GameSimple struct {
+	Id         string `json:"_id"`
+	Title      string `json:"title"`
+	Version    string `json:"version"`
+	Icon       Image  `json:"icon"`
+	Publisher  string `json:"publisher"`
+	Adult      bool   `json:"adult"`
+	Suggest    bool   `json:"suggest"`
+	LikesCount int    `json:"likesCount"`
+	Android    bool   `json:"android"`
+	Ios        bool   `json:"ios"`
+}
+
+type GameResponse struct {
+	Response
+	Data struct {
+		Game GameInfo `json:"game"`
+	} `json:"data"`
+}
+
+type GameInfo struct {
+	GameSimple
+	Description    string    `json:"description"`
+	UpdateContent  string    `json:"updateContent"`
+	VideoLink      string    `json:"videoLink"`
+	Screenshots    []Image   `json:"screenshots"`
+	CommentsCount  int       `json:"commentsCount"`
+	DownloadsCount int       `json:"downloadsCount"`
+	IsLiked        bool      `json:"isLiked"`
+	AndroidLinks   []string  `json:"androidLinks"`
+	AndroidSize    float32   `json:"androidSize"`
+	IosLinks       []string  `json:"iosLinks"`
+	IosSize        float32   `json:"iosSize"`
+	UpdatedAt      time.Time `json:"updated_at"`
+	CreatedAt      time.Time `json:"created_at"`
+}
