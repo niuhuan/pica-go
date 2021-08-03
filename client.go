@@ -190,16 +190,19 @@ func (client *Client) Categories() ([]Category, error) {
 
 // Comics 分类下的漫画
 // category 为空字符串则为所有分类
-func (client *Client) Comics(category string, sort string, page int) (*ComicsPage, error) {
+func (client *Client) Comics(category string, tag string, sort string, page int) (*ComicsPage, error) {
 	mUrl := "comics?"
 	if len(category) > 0 {
 		mUrl = mUrl + fmt.Sprintf("c=%s&", url.QueryEscape(category))
+	}
+	if len(tag) > 0 {
+		mUrl = mUrl + fmt.Sprintf("t=%s&", url.QueryEscape(tag))
 	}
 	buff, err := client.getToPica(mUrl + "s=" + sort + "&page=" + strconv.Itoa(page))
 	if err != nil {
 		return nil, err
 	}
-	var comicsResponse ComicsResponse
+	var comicsResponse ComicsPageResponse
 	err = json.Unmarshal(buff, &comicsResponse)
 	if err != nil {
 		return nil, err
@@ -220,7 +223,7 @@ func (client *Client) SearchComics(categories []string, keyword string, sort str
 	if err != nil {
 		return nil, err
 	}
-	var comicsResponse ComicsResponse
+	var comicsResponse ComicsPageResponse
 	err = json.Unmarshal(buff, &comicsResponse)
 	if err != nil {
 		return nil, err
@@ -238,12 +241,26 @@ func (client *Client) SearchComicsInCategories(keyword string, sort string, page
 	if err != nil {
 		return nil, err
 	}
-	var comicsResponse ComicsResponse
+	var comicsResponse ComicsPageResponse
 	err = json.Unmarshal(buff, &comicsResponse)
 	if err != nil {
 		return nil, err
 	}
 	return &comicsResponse.Data.Comics, nil
+}
+
+// RandomComics 随机漫画
+func (client *Client) RandomComics() ([]ComicSimple, error) {
+	buff, err := client.getToPica("comics/random")
+	if err != nil {
+		return nil, err
+	}
+	var comicsResponse ComicsResponse
+	err = json.Unmarshal(buff, &comicsResponse)
+	if err != nil {
+		return nil, err
+	}
+	return comicsResponse.Data.Comics, nil
 }
 
 // ComicInfo 漫画详情
@@ -338,7 +355,7 @@ func (client *Client) FavouriteComics(sort string, page int) (*ComicsPage, error
 	if err != nil {
 		return nil, err
 	}
-	var comicsResponse ComicsResponse
+	var comicsResponse ComicsPageResponse
 	err = json.Unmarshal(buff, &comicsResponse)
 	if err != nil {
 		return nil, err
@@ -371,7 +388,7 @@ func (client *Client) ComicRecommendation(comicId string) ([]ComicSimple, error)
 	if err != nil {
 		return nil, err
 	}
-	var recommendationResponse RecommendationResponse
+	var recommendationResponse ComicsResponse
 	err = json.Unmarshal(buff, &recommendationResponse)
 	if err != nil {
 		return nil, err

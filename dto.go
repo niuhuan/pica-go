@@ -89,7 +89,7 @@ type Category struct {
 	Link        string `json:"link"`
 }
 
-type ComicsResponse struct {
+type ComicsPageResponse struct {
 	Response
 	Data struct {
 		Comics ComicsPage `json:"comics"`
@@ -99,6 +99,13 @@ type ComicsResponse struct {
 type ComicsPage struct {
 	Page
 	Docs []ComicSimple `json:"docs"`
+}
+
+type ComicsResponse struct {
+	Response
+	Data struct {
+		Comics []ComicSimple `json:"comics"`
+	} `json:"data"`
 }
 
 type ComicSimple struct {
@@ -214,13 +221,6 @@ type Comment struct {
 type CommentUser struct {
 	UserBasic
 	Role string `json:"role"`
-}
-
-type RecommendationResponse struct {
-	Response
-	Data struct {
-		Comics []ComicSimple `json:"comics"`
-	} `json:"data"`
 }
 
 type HotKeywordsResponse struct {

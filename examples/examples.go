@@ -93,7 +93,7 @@ func ExampleCategories(client *pica.Client) {
 // ExampleCategoryComics (需要登录)
 // 获取分类下的漫画
 func ExampleCategoryComics(client *pica.Client) {
-	comicPage, err := client.Comics("全彩", pica.SortDefault, 1)
+	comicPage, err := client.Comics("", "", pica.SortDefault, 1)
 	if err != nil {
 		panic(err)
 	}
