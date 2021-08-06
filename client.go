@@ -190,13 +190,19 @@ func (client *Client) Categories() ([]Category, error) {
 
 // Comics 分类下的漫画
 // category 为空字符串则为所有分类
-func (client *Client) Comics(category string, tag string, sort string, page int) (*ComicsPage, error) {
+func (client *Client) Comics(category string, tag string, creatorId string, chineseTeam string, sort string, page int) (*ComicsPage, error) {
 	mUrl := "comics?"
 	if len(category) > 0 {
 		mUrl = mUrl + fmt.Sprintf("c=%s&", url.QueryEscape(category))
 	}
 	if len(tag) > 0 {
 		mUrl = mUrl + fmt.Sprintf("t=%s&", url.QueryEscape(tag))
+	}
+	if len(creatorId) > 0 {
+		mUrl = mUrl + fmt.Sprintf("ca=%s&", creatorId)
+	}
+	if len(chineseTeam) > 0 {
+		mUrl = mUrl + fmt.Sprintf("ct=%s&", url.QueryEscape(chineseTeam))
 	}
 	buff, err := client.getToPica(mUrl + "s=" + sort + "&page=" + strconv.Itoa(page))
 	if err != nil {
