@@ -17,3 +17,6 @@ const ActionUnlike = "unlike"
 const ActionFavourite = "favourite"
 const ActionUnFavourite = "un_favourite"
 
+const LeaderboardH24 = "H24"
+const LeaderboardD7 = "D7"
+const LeaderboardD30 = "D30"

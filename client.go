@@ -269,6 +269,20 @@ func (client *Client) RandomComics() ([]ComicSimple, error) {
 	return comicsResponse.Data.Comics, nil
 }
 
+// Leaderboard 排行榜
+func (client *Client) Leaderboard(leaderboardType string) ([]ComicSimple, error) {
+	buff, err := client.getToPica(fmt.Sprintf("comics/leaderboard?tt=%s&ct=VC", leaderboardType))
+	if err != nil {
+		return nil, err
+	}
+	var comicsResponse ComicsResponse
+	err = json.Unmarshal(buff, &comicsResponse)
+	if err != nil {
+		return nil, err
+	}
+	return comicsResponse.Data.Comics, nil
+}
+
 // ComicInfo 漫画详情
 func (client *Client) ComicInfo(comicId string) (*ComicInfo, error) {
 	buff, err := client.getToPica("comics/" + comicId)
