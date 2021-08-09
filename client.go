@@ -128,6 +128,12 @@ func (client *Client) responseFromPica(req *http.Request) ([]byte, error) {
 	return buff, nil
 }
 
+// Register 注册新用户
+func (client *Client) Register(dto RegisterDto) error {
+	_, err := client.postToPica("auth/register", &dto)
+	return err
+}
+
 // Login 登录, 登录无异常则注入TOKEN
 func (client *Client) Login(username string, password string) error {
 	buff, err := client.postToPica("auth/sign-in", &LoginRequest{

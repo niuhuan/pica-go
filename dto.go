@@ -22,6 +22,20 @@ type Image struct {
 	FileServer   string `json:"fileServer"`
 }
 
+type RegisterDto struct {
+	Email     string `json:"email"`    // 邮箱
+	Password  string `json:"password"` // 8字以上
+	Name      string `json:"name"`     // 2 - 50 字
+	Birthday  string `json:"birthday"` // 2012-01-01
+	Gender    string `json:"gender"`   // m, f, bot
+	Answer1   string `json:"answer1"`
+	Answer2   string `json:"answer2"`
+	Answer3   string `json:"answer3"`
+	Question1 string `json:"question1"`
+	Question2 string `json:"question2"`
+	Question3 string `json:"question3"`
+}
+
 type UserBasic struct {
 	Id         string   `json:"_id"`
 	Gender     string   `json:"gender"`
