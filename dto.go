@@ -237,6 +237,49 @@ type CommentUser struct {
 	Role string `json:"role"`
 }
 
+type CommentChildrenResponse struct {
+	Response
+	Data struct {
+		Comments    CommentChildrenPage `json:"comments"`
+	} `json:"data"`
+}
+
+type CommentChildrenPage struct {
+	Page
+	Docs []CommentChild `json:"docs"`
+}
+
+type CommentChild struct {
+	Comment
+	Parent string `json:"_parent"`
+}
+
+type MyCommentsPageResponse struct {
+	Response
+	Data struct{
+		Comments MyCommentsPage `json:"comments"`
+	} `json:"data"`
+}
+
+type MyCommentsPage struct {
+	Page
+	Docs []MyComment `json:"docs"`
+}
+
+type MyComment struct {
+	Id      string `json:"_id"`
+	Content string `json:"content"`
+	Comic   struct {
+		Id    string `json:"_id"`
+		Title string `json:"title"`
+	} `json:"_comic"`
+	Hide          bool      `json:"hide"`
+	CreatedAt     time.Time `json:"created_at"`
+	LikesCount    int       `json:"likesCount"`
+	CommentsCount int       `json:"commentsCount"`
+	IsLiked       bool      `json:"isLiked"`
+}
+
 type HotKeywordsResponse struct {
 	Response
 	Data struct {

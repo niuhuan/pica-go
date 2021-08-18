@@ -180,18 +180,61 @@ func (client *Client) PunchIn() (*PunchStatus, error) {
 	return &response.Data.Res, nil
 }
 
+func (client *Client) MyComments(page int) (*MyCommentsPage, error) {
+	buff, err := client.getToPica(fmt.Sprintf("users/my-comments?page=%d", page))
+	if err != nil {
+		return nil, err
+	}
+	buff = replaceStringPage(buff)
+	var response MyCommentsPageResponse
+	err = json.Unmarshal(buff, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response.Data.Comments, nil
+}
+
+// PostComment 对漫画进行评论, 但是评论后无法删除
+func (client *Client) PostComment(comicId string, content string) error {
+	_, err := client.postToPica(fmt.Sprintf("comics/%s/comments", comicId), map[string]string{
+		"content": content,
+	})
+	return err
+}
+
+// HideComment 哔咔API里的接口, 不知道做什么用的, 推测是管理员用接口
+func (client *Client) HideComment(commentId string) error {
+	_, err := client.postToPica(fmt.Sprintf("comments/%s/delete", commentId), nil)
+	return err
+}
+
+// CommentChildren 获取子评论
+func (client *Client) CommentChildren(commentId string, page int) (*CommentChildrenPage, error) {
+	buff, err := client.getToPica(fmt.Sprintf("comments/%s/childrens?page=%d", commentId, page))
+	if err != nil {
+		return nil, err
+	}
+	buff = replaceStringPage(buff)
+	var response CommentChildrenResponse
+	err = json.Unmarshal(buff, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response.Data.Comments, nil
+}
+
 // Categories 获取分类
 func (client *Client) Categories() ([]Category, error) {
 	buff, err := client.getToPica("categories")
 	if err != nil {
 		return nil, err
 	}
-	var categoriesResponse CategoriesResponse
-	err = json.Unmarshal(buff, &categoriesResponse)
+	var response CategoriesResponse
+	err = json.Unmarshal(buff, &response)
 	if err != nil {
 		return nil, err
 	}
-	return categoriesResponse.Data.Categories, nil
+	return response.Data.Categories, nil
 }
 
 // Comics 分类下的漫画
@@ -395,11 +438,7 @@ func (client *Client) ComicCommentsPage(comicId string, page int) (*CommentsPage
 	if err != nil {
 		return nil, err
 	}
-	// 这里的page是字符串, 自带的json不能解析, 正则替换一下
-	p, _ := regexp.Compile("\"page\": \"(\\d+)\",")
-	buff = []byte(p.ReplaceAllString(string(buff), "\"page\": $1,"))
-	//
-	println(string(buff))
+	buff = replaceStringPage(buff)
 	var commentsResponse CommentsResponse
 	err = json.Unmarshal(buff, &commentsResponse)
 	if err != nil {
@@ -462,4 +501,12 @@ func (client *Client) GameInfo(gameId string) (*GameInfo, error) {
 		return nil, err
 	}
 	return &response.Data.Game, nil
+}
+
+//
+var stringPageRegexp, _ = regexp.Compile("\"page\": \"(\\d+)\",")
+var stringPageReplaceTo = []byte("\"page\": $1,")
+
+func replaceStringPage(buff []byte) []byte {
+	return stringPageRegexp.ReplaceAll(buff, stringPageReplaceTo)
 }
