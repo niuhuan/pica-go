@@ -223,6 +223,14 @@ func (client *Client) CommentChildren(commentId string, page int) (*CommentChild
 	return &response.Data.Comments, nil
 }
 
+// PostChildComment 对漫画评论进行回复(子评论), 但是评论后无法删除
+func (client *Client) PostChildComment(commentId string, content string) error {
+	_, err := client.postToPica(fmt.Sprintf("comments/%s", commentId), map[string]string{
+		"content": content,
+	})
+	return err
+}
+
 // Categories 获取分类
 func (client *Client) Categories() ([]Category, error) {
 	buff, err := client.getToPica("categories")
