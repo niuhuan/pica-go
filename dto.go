@@ -2,6 +2,7 @@ package pica
 
 import "time"
 
+// Response 返回体格式
 type Response struct {
 	Code    int    `json:"code"`
 	Error   string `json:"error"`
@@ -9,6 +10,7 @@ type Response struct {
 	Detail  string `json:"detail"`
 }
 
+// Page 分页格式
 type Page struct {
 	Total int `json:"total"`
 	Limit int `json:"limit"`
@@ -16,12 +18,14 @@ type Page struct {
 	Pages int `json:"pages"`
 }
 
+// Image 图片资源
 type Image struct {
 	OriginalName string `json:"originalName"`
 	Path         string `json:"path"`
 	FileServer   string `json:"fileServer"`
 }
 
+// RegisterDto 注册接口请求体
 type RegisterDto struct {
 	Email     string `json:"email"`    // 邮箱
 	Password  string `json:"password"` // 8字以上
@@ -36,6 +40,7 @@ type RegisterDto struct {
 	Question3 string `json:"question3"`
 }
 
+// UserBasic 用户的基本信息
 type UserBasic struct {
 	Id         string   `json:"_id"`
 	Gender     string   `json:"gender"`
@@ -48,11 +53,13 @@ type UserBasic struct {
 	Avatar     Image    `json:"avatar"`
 }
 
+// LoginRequest 登录的请求体 (PS:Email字段为账号, 并不一定是邮箱格式)
 type LoginRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
+// LoginResponse 登录的返回体
 type LoginResponse struct {
 	Response
 	Data struct {
@@ -60,20 +67,23 @@ type LoginResponse struct {
 	} `json:"data"`
 }
 
+// UserProfileResponse 获取个人信息接口返回体
 type UserProfileResponse struct {
 	Data struct {
 		User UserProfile `json:"user"`
 	} `json:"data"`
 }
 
+// UserProfile 获取个人信息接口返回内容 | 个人信息
 type UserProfile struct {
 	UserBasic
 	Birthday  string    `json:"birthday"`
 	Email     string    `json:"email"`
 	CreatedAt time.Time `json:"created_at"`
-	IsPunched bool      `json:"isPunched"`
+	IsPunched bool      `json:"isPunched"` // 是否打了哔咔
 }
 
+// PunchResponse 打哔咔接口返回体
 type PunchResponse struct {
 	Response
 	Data struct {
@@ -81,11 +91,13 @@ type PunchResponse struct {
 	} `json:"data"`
 }
 
+// PunchStatus 打哔咔接口返回内容
 type PunchStatus struct {
 	Status         string `json:"status"`
 	PunchInLastDay string `json:"punchInLastDay"`
 }
 
+// CategoriesResponse 获取分类接口返回体
 type CategoriesResponse struct {
 	Response
 	Data struct {
@@ -93,6 +105,7 @@ type CategoriesResponse struct {
 	} `json:"data"`
 }
 
+// Category 分类
 type Category struct {
 	Id          string `json:"_id"`
 	Title       string `json:"title"`
@@ -103,6 +116,7 @@ type Category struct {
 	Link        string `json:"link"`
 }
 
+// ComicsPageResponse 漫画列表接口返回体
 type ComicsPageResponse struct {
 	Response
 	Data struct {
@@ -110,11 +124,13 @@ type ComicsPageResponse struct {
 	} `json:"data"`
 }
 
+// ComicsPage 漫画的分页
 type ComicsPage struct {
 	Page
 	Docs []ComicSimple `json:"docs"`
 }
 
+// ComicsResponse 漫画列表返回体 用于随机漫画, 排行榜等不分页的接口
 type ComicsResponse struct {
 	Response
 	Data struct {
@@ -122,6 +138,7 @@ type ComicsResponse struct {
 	} `json:"data"`
 }
 
+// ComicSimple 漫画摘要内容, 列表页面使用
 type ComicSimple struct {
 	Id         string   `json:"_id"`
 	Title      string   `json:"title"`
@@ -134,6 +151,7 @@ type ComicSimple struct {
 	LikesCount int      `json:"likesCount"`
 }
 
+// ComicInfoResponse 获取漫画详情接口返回体
 type ComicInfoResponse struct {
 	Response
 	Data struct {
@@ -141,6 +159,7 @@ type ComicInfoResponse struct {
 	} `json:"data" `
 }
 
+// ComicInfo 漫画详情
 type ComicInfo struct {
 	ComicSimple
 	Creator       Creator   `json:"_creator"`
@@ -156,6 +175,7 @@ type ComicInfo struct {
 	CommentsCount int       `json:"commentsCount"`
 }
 
+// Creator 漫画的创建人
 type Creator struct {
 	UserBasic
 	Slogan    string `json:"slogan"`
@@ -163,6 +183,7 @@ type Creator struct {
 	Character string `json:"character"`
 }
 
+// EpPageResponse 获取漫画章节列表接口返回体
 type EpPageResponse struct {
 	Response
 	Data struct {
@@ -170,11 +191,13 @@ type EpPageResponse struct {
 	} `json:"data"`
 }
 
+// EpPage 漫画的章节的分页
 type EpPage struct {
 	Page
 	Docs []Ep `json:"docs"`
 }
 
+// Ep 漫画的章节
 type Ep struct {
 	Id        string    `json:"_id"`
 	Title     string    `json:"title"`
@@ -182,6 +205,7 @@ type Ep struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+// ComicPicturePageResponse 获取章节图片接口返回体
 type ComicPicturePageResponse struct {
 	Response
 	Data struct {
@@ -190,22 +214,26 @@ type ComicPicturePageResponse struct {
 	} `json:"data"`
 }
 
+// ComicPicturePage 章节图片的分页
 type ComicPicturePage struct {
 	Page
 	Docs []ComicPicture `json:"docs"`
 }
 
+// ComicPicture 章节的图片
 type ComicPicture struct {
 	Media Image  `json:"media"`
 	Id    string `json:"_id"`
 }
 
+// ActionResponse 点赞,收藏 等接口返回体
 type ActionResponse struct {
 	Data struct {
 		Action string `json:"action"`
 	} `json:"data"`
 }
 
+// CommentsResponse 获取漫画评论接口返回体
 type CommentsResponse struct {
 	Response
 	Data struct {
@@ -214,11 +242,13 @@ type CommentsResponse struct {
 	} `json:"data"`
 }
 
+// CommentsPage 漫画评论的分页
 type CommentsPage struct {
 	Page
 	Docs []Comment `json:"docs"`
 }
 
+// Comment 漫画的评论
 type Comment struct {
 	Id            string      `json:"_id"`
 	Content       string      `json:"content"`
@@ -232,40 +262,47 @@ type Comment struct {
 	IsLiked       bool        `json:"isLiked"`
 }
 
+// CommentUser 发出此评论的人
 type CommentUser struct {
 	UserBasic
 	Role string `json:"role"`
 }
 
+// CommentChildrenResponse 获取子评论接口返回体
 type CommentChildrenResponse struct {
 	Response
 	Data struct {
-		Comments    CommentChildrenPage `json:"comments"`
+		Comments CommentChildrenPage `json:"comments"`
 	} `json:"data"`
 }
 
+// CommentChildrenPage 子评论分页
 type CommentChildrenPage struct {
 	Page
 	Docs []CommentChild `json:"docs"`
 }
 
+// CommentChild 子评论
 type CommentChild struct {
 	Comment
 	Parent string `json:"_parent"`
 }
 
+// MyCommentsPageResponse 我的评论接口返回体
 type MyCommentsPageResponse struct {
 	Response
-	Data struct{
+	Data struct {
 		Comments MyCommentsPage `json:"comments"`
 	} `json:"data"`
 }
 
+// MyCommentsPage 我的评论分页
 type MyCommentsPage struct {
 	Page
 	Docs []MyComment `json:"docs"`
 }
 
+// MyComment 我的评论
 type MyComment struct {
 	Id      string `json:"_id"`
 	Content string `json:"content"`
@@ -280,6 +317,7 @@ type MyComment struct {
 	IsLiked       bool      `json:"isLiked"`
 }
 
+// HotKeywordsResponse 大家搜在搜接口返回体
 type HotKeywordsResponse struct {
 	Response
 	Data struct {
@@ -287,6 +325,7 @@ type HotKeywordsResponse struct {
 	} `json:"data"`
 }
 
+// GamePageResponse 游戏列表接口返回体
 type GamePageResponse struct {
 	Response
 	Data struct {
@@ -294,11 +333,13 @@ type GamePageResponse struct {
 	} `json:"data"`
 }
 
+// GamePage 游戏列表
 type GamePage struct {
 	Page
 	Docs []GameSimple `json:"docs"`
 }
 
+// GameSimple 游戏摘要
 type GameSimple struct {
 	Id         string `json:"_id"`
 	Title      string `json:"title"`
@@ -312,6 +353,7 @@ type GameSimple struct {
 	Ios        bool   `json:"ios"`
 }
 
+// GameResponse 游戏详情接口返回体
 type GameResponse struct {
 	Response
 	Data struct {
@@ -319,6 +361,7 @@ type GameResponse struct {
 	} `json:"data"`
 }
 
+// GameInfo 游戏详情
 type GameInfo struct {
 	GameSimple
 	Description    string    `json:"description"`

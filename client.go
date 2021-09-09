@@ -274,6 +274,7 @@ func (client *Client) Comics(category string, tag string, creatorId string, chin
 }
 
 // SearchComics 搜索漫画
+// PS : 此接口并没有返回 PagesCount EpsCount
 func (client *Client) SearchComics(categories []string, keyword string, sort string, page int) (*ComicsPage, error) {
 	params := map[string]interface{}{
 		"keyword": keyword,

@@ -18,8 +18,20 @@ PIKA API
 
 ## 使用方法
 
-下载zip或克隆仓库, 然后在go.mod中加入以下内容, 并调用 client := pica.Client{}
-```
-require pica v0.0.0
-replace pica v0.0.0 => ./pica
-```
+- 将pica-golang添加到您git仓库的子模块
+  ```shell
+  git module add -b master https://github.com/niuhuan/pica-golang.git
+  ```
+- 在go.mod中加入以下内容
+  ```
+  require pica v0.0.0
+  replace pica v0.0.0 => ./pica-golang
+  ```
+- 调用客户端
+- ```text
+  var client = pica.Client{}
+  ```
+
+## 其他语言
+
+- 请参考 [picacomic](https://github.com/AnkiKong/picacomic) 搭建自己的客户端
