@@ -1,6 +1,6 @@
-PICA-GO GOLANG
+PICA-GO
 ===========
-GoLang哔卡漫画客户端
+GoLang哔卡漫画API
 
 ## 实现功能
 
