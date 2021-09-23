@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"github.com/niuhuan/pica"
+	"github.com/niuhuan/pica-go"
 	"net"
 	"net/http"
 	"net/url"

@@ -1,4 +1,4 @@
-PICA GOLANG
+PICA-GO GOLANG
 ===========
 GoLang哔卡漫画客户端
 
@@ -14,14 +14,14 @@ GoLang哔卡漫画客户端
 - [x] 社交
     - [x] 大家都在搜
 - [x] 网络
-    - [x] 分流 / 代理 ([examples](https://github.com/niuhuan/pica-golang/blob/master/examples/examples.go))
+    - [x] 分流 / 代理 ([examples](https://github.com/niuhuan/pica-go/blob/master/examples/examples.go))
 
 ## 使用方法
 
 ```text
 package main
 
-import "github.com/niuhuan/pica-golang"
+import "github.com/niuhuan/pica-go"
 
 func main(){
   client := pica.Client{}  
