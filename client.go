@@ -185,7 +185,7 @@ func (client *Client) MyComments(page int) (*MyCommentsPage, error) {
 	if err != nil {
 		return nil, err
 	}
-	buff = replaceStringPage(buff)
+	buff = fixJson(buff)
 	var response MyCommentsPageResponse
 	err = json.Unmarshal(buff, &response)
 	if err != nil {
@@ -214,7 +214,7 @@ func (client *Client) CommentChildren(commentId string, page int) (*CommentChild
 	if err != nil {
 		return nil, err
 	}
-	buff = replaceStringPage(buff)
+	buff = fixJson(buff)
 	var response CommentChildrenResponse
 	err = json.Unmarshal(buff, &response)
 	if err != nil {
@@ -287,6 +287,7 @@ func (client *Client) SearchComics(categories []string, keyword string, sort str
 	if err != nil {
 		return nil, err
 	}
+	buff = fixJson(buff)
 	var comicsResponse ComicsPageResponse
 	err = json.Unmarshal(buff, &comicsResponse)
 	if err != nil {
@@ -397,8 +398,8 @@ func (client *Client) ComicPicturePageWithQuality(comicId string, epOrder int, p
 	return &epPageResponse.Data.Pages, nil
 }
 
-// SwitchLike (取消)收藏漫画
-// 第一次收藏，第二次是取消收藏 action是最终结果
+// SwitchLike (取消)喜欢漫画
+// 第一次喜欢，第二次是取消喜欢 action是最终结果
 func (client *Client) SwitchLike(comicId string) (*string, error) {
 	buff, err := client.postToPica("comics/"+comicId+"/like", nil)
 	if err != nil {
@@ -447,7 +448,7 @@ func (client *Client) ComicCommentsPage(comicId string, page int) (*CommentsPage
 	if err != nil {
 		return nil, err
 	}
-	buff = replaceStringPage(buff)
+	buff = fixJson(buff)
 	var commentsResponse CommentsResponse
 	err = json.Unmarshal(buff, &commentsResponse)
 	if err != nil {
@@ -512,10 +513,16 @@ func (client *Client) GameInfo(gameId string) (*GameInfo, error) {
 	return &response.Data.Game, nil
 }
 
-//
+// 修复page
 var stringPageRegexp, _ = regexp.Compile("\"page\": \"(\\d+)\",")
 var stringPageReplaceTo = []byte("\"page\": $1,")
+// 修复likesCount
+var stringLikesCountRegexp, _ = regexp.Compile("\"likesCount\": \"(\\d+)\"")
+var stringLikesCountReplaceTo = []byte("\"likesCount\": $1")
 
-func replaceStringPage(buff []byte) []byte {
-	return stringPageRegexp.ReplaceAll(buff, stringPageReplaceTo)
+// 修复JSON
+func fixJson(buff []byte) []byte {
+	buff = stringPageRegexp.ReplaceAll(buff, stringPageReplaceTo)
+	buff = stringLikesCountRegexp.ReplaceAll(buff, stringLikesCountReplaceTo)
+	return buff
 }
