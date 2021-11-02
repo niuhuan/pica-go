@@ -231,6 +231,21 @@ func (client *Client) PostChildComment(commentId string, content string) error {
 	return err
 }
 
+// SwitchLikeComment (取消)喜欢评论/子评论
+// 第一次喜欢，第二次是取消喜欢 action是最终结果 ( ActionLike or ActionUnlike )
+func (client *Client) SwitchLikeComment(commentId string) (*string, error) {
+	buff, err := client.postToPica("comments/"+commentId+"/like", nil)
+	if err != nil {
+		return nil, err
+	}
+	var actionResponse ActionResponse
+	err = json.Unmarshal(buff, &actionResponse)
+	if err != nil {
+		return nil, err
+	}
+	return &actionResponse.Data.Action, nil
+}
+
 // Categories 获取分类
 func (client *Client) Categories() ([]Category, error) {
 	buff, err := client.getToPica("categories")

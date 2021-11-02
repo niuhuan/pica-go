@@ -19,7 +19,7 @@ const ImageQualityHigh = "high"
 
 // 一些请求结果
 
-const ActionLink = "like"
+const ActionLike = "like"
 const ActionUnlike = "unlike"
 
 const ActionFavourite = "favourite"
