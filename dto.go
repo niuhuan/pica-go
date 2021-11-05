@@ -10,8 +10,8 @@ type Response struct {
 	Detail  string `json:"detail"`
 }
 
-// Page 分页格式
-type Page struct {
+// PageData 分页格式
+type PageData struct {
 	Total int `json:"total"`
 	Limit int `json:"limit"`
 	Page  int `json:"page"`
@@ -126,7 +126,7 @@ type ComicsPageResponse struct {
 
 // ComicsPage 漫画的分页
 type ComicsPage struct {
-	Page
+	PageData
 	Docs []ComicSimple `json:"docs"`
 }
 
@@ -193,7 +193,7 @@ type EpPageResponse struct {
 
 // EpPage 漫画的章节的分页
 type EpPage struct {
-	Page
+	PageData
 	Docs []Ep `json:"docs"`
 }
 
@@ -216,7 +216,7 @@ type ComicPicturePageResponse struct {
 
 // ComicPicturePage 章节图片的分页
 type ComicPicturePage struct {
-	Page
+	PageData
 	Docs []ComicPicture `json:"docs"`
 }
 
@@ -244,7 +244,7 @@ type CommentsResponse struct {
 
 // CommentsPage 漫画评论的分页
 type CommentsPage struct {
-	Page
+	PageData
 	Docs []Comment `json:"docs"`
 }
 
@@ -278,7 +278,7 @@ type CommentChildrenResponse struct {
 
 // CommentChildrenPage 子评论分页
 type CommentChildrenPage struct {
-	Page
+	PageData
 	Docs []CommentChild `json:"docs"`
 }
 
@@ -298,7 +298,7 @@ type MyCommentsPageResponse struct {
 
 // MyCommentsPage 我的评论分页
 type MyCommentsPage struct {
-	Page
+	PageData
 	Docs []MyComment `json:"docs"`
 }
 
@@ -335,7 +335,7 @@ type GamePageResponse struct {
 
 // GamePage 游戏列表
 type GamePage struct {
-	Page
+	PageData
 	Docs []GameSimple `json:"docs"`
 }
 
@@ -377,4 +377,20 @@ type GameInfo struct {
 	IosSize        float32   `json:"iosSize"`
 	UpdatedAt      time.Time `json:"updated_at"`
 	CreatedAt      time.Time `json:"created_at"`
+}
+
+// LeaderboardOfKnightResponse 骑士榜接口返回体
+type LeaderboardOfKnightResponse struct {
+	Response
+	Data struct {
+		Users []Knight `json:"users"`
+	} `json:"data"`
+}
+
+// Knight 用户(骑士榜)
+type Knight struct {
+	UserBasic
+	Role           string `json:"role"`
+	Character      string `json:"character"`
+	ComicsUploaded int    `json:"comicsUploaded"`
 }

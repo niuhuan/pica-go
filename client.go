@@ -528,9 +528,24 @@ func (client *Client) GameInfo(gameId string) (*GameInfo, error) {
 	return &response.Data.Game, nil
 }
 
+// LeaderboardOfKnight 骑士榜
+func (client *Client) LeaderboardOfKnight() ([]Knight, error) {
+	buff, err := client.getToPica("comics/knight-leaderboard")
+	if err != nil {
+		panic(err)
+	}
+	var response LeaderboardOfKnightResponse
+	err = json.Unmarshal(buff, &response)
+	if err != nil {
+		return nil, err
+	}
+	return response.Data.Users, nil
+}
+
 // 修复page
 var stringPageRegexp, _ = regexp.Compile("\"page\": \"(\\d+)\",")
 var stringPageReplaceTo = []byte("\"page\": $1,")
+
 // 修复likesCount
 var stringLikesCountRegexp, _ = regexp.Compile("\"likesCount\": \"(\\d+)\"")
 var stringLikesCountReplaceTo = []byte("\"likesCount\": $1")
