@@ -180,72 +180,6 @@ func (client *Client) PunchIn() (*PunchStatus, error) {
 	return &response.Data.Res, nil
 }
 
-func (client *Client) MyComments(page int) (*MyCommentsPage, error) {
-	buff, err := client.getToPica(fmt.Sprintf("users/my-comments?page=%d", page))
-	if err != nil {
-		return nil, err
-	}
-	buff = fixJson(buff)
-	var response MyCommentsPageResponse
-	err = json.Unmarshal(buff, &response)
-	if err != nil {
-		return nil, err
-	}
-	return &response.Data.Comments, nil
-}
-
-// PostComment 对漫画进行评论, 但是评论后无法删除
-func (client *Client) PostComment(comicId string, content string) error {
-	_, err := client.postToPica(fmt.Sprintf("comics/%s/comments", comicId), map[string]string{
-		"content": content,
-	})
-	return err
-}
-
-// HideComment 哔咔API里的接口, 不知道做什么用的, 推测是管理员用接口
-func (client *Client) HideComment(commentId string) error {
-	_, err := client.postToPica(fmt.Sprintf("comments/%s/delete", commentId), nil)
-	return err
-}
-
-// CommentChildren 获取子评论
-func (client *Client) CommentChildren(commentId string, page int) (*CommentChildrenPage, error) {
-	buff, err := client.getToPica(fmt.Sprintf("comments/%s/childrens?page=%d", commentId, page))
-	if err != nil {
-		return nil, err
-	}
-	buff = fixJson(buff)
-	var response CommentChildrenResponse
-	err = json.Unmarshal(buff, &response)
-	if err != nil {
-		return nil, err
-	}
-	return &response.Data.Comments, nil
-}
-
-// PostChildComment 对漫画评论进行回复(子评论), 但是评论后无法删除
-func (client *Client) PostChildComment(commentId string, content string) error {
-	_, err := client.postToPica(fmt.Sprintf("comments/%s", commentId), map[string]string{
-		"content": content,
-	})
-	return err
-}
-
-// SwitchLikeComment (取消)喜欢评论/子评论
-// 第一次喜欢，第二次是取消喜欢 action是最终结果 ( ActionLike or ActionUnlike )
-func (client *Client) SwitchLikeComment(commentId string) (*string, error) {
-	buff, err := client.postToPica("comments/"+commentId+"/like", nil)
-	if err != nil {
-		return nil, err
-	}
-	var actionResponse ActionResponse
-	err = json.Unmarshal(buff, &actionResponse)
-	if err != nil {
-		return nil, err
-	}
-	return &actionResponse.Data.Action, nil
-}
-
 // Categories 获取分类
 func (client *Client) Categories() ([]Category, error) {
 	buff, err := client.getToPica("categories")
@@ -472,6 +406,72 @@ func (client *Client) ComicCommentsPage(comicId string, page int) (*CommentsPage
 	return &commentsResponse.Data.Comments, nil
 }
 
+func (client *Client) MyComments(page int) (*MyCommentsPage, error) {
+	buff, err := client.getToPica(fmt.Sprintf("users/my-comments?page=%d", page))
+	if err != nil {
+		return nil, err
+	}
+	buff = fixJson(buff)
+	var response MyCommentsPageResponse
+	err = json.Unmarshal(buff, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response.Data.Comments, nil
+}
+
+// PostComment 对漫画进行评论, 但是评论后无法删除
+func (client *Client) PostComment(comicId string, content string) error {
+	_, err := client.postToPica(fmt.Sprintf("comics/%s/comments", comicId), map[string]string{
+		"content": content,
+	})
+	return err
+}
+
+// HideComment 哔咔API里的接口, 不知道做什么用的, 推测是管理员用接口
+func (client *Client) HideComment(commentId string) error {
+	_, err := client.postToPica(fmt.Sprintf("comments/%s/delete", commentId), nil)
+	return err
+}
+
+// CommentChildren 获取子评论
+func (client *Client) CommentChildren(commentId string, page int) (*CommentChildrenPage, error) {
+	buff, err := client.getToPica(fmt.Sprintf("comments/%s/childrens?page=%d", commentId, page))
+	if err != nil {
+		return nil, err
+	}
+	buff = fixJson(buff)
+	var response CommentChildrenResponse
+	err = json.Unmarshal(buff, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response.Data.Comments, nil
+}
+
+// PostChildComment 对漫画评论进行回复(子评论), 但是评论后无法删除
+func (client *Client) PostChildComment(commentId string, content string) error {
+	_, err := client.postToPica(fmt.Sprintf("comments/%s", commentId), map[string]string{
+		"content": content,
+	})
+	return err
+}
+
+// SwitchLikeComment (取消)喜欢评论/子评论
+// 第一次喜欢，第二次是取消喜欢 action是最终结果 ( ActionLike or ActionUnlike )
+func (client *Client) SwitchLikeComment(commentId string) (*string, error) {
+	buff, err := client.postToPica("comments/"+commentId+"/like", nil)
+	if err != nil {
+		return nil, err
+	}
+	var actionResponse ActionResponse
+	err = json.Unmarshal(buff, &actionResponse)
+	if err != nil {
+		return nil, err
+	}
+	return &actionResponse.Data.Action, nil
+}
+
 // ComicRecommendation 看了这个本子的也在看
 func (client *Client) ComicRecommendation(comicId string) ([]ComicSimple, error) {
 	buff, err := client.getToPica("comics/" + comicId + "/recommendation")
@@ -498,6 +498,20 @@ func (client *Client) HotKeywords() ([]string, error) {
 		return nil, err
 	}
 	return hotKeywordsResponse.Data.Keywords, nil
+}
+
+// LeaderboardOfKnight 骑士榜
+func (client *Client) LeaderboardOfKnight() ([]Knight, error) {
+	buff, err := client.getToPica("comics/knight-leaderboard")
+	if err != nil {
+		panic(err)
+	}
+	var response LeaderboardOfKnightResponse
+	err = json.Unmarshal(buff, &response)
+	if err != nil {
+		return nil, err
+	}
+	return response.Data.Users, nil
 }
 
 // GamePage 游戏列表
@@ -528,18 +542,18 @@ func (client *Client) GameInfo(gameId string) (*GameInfo, error) {
 	return &response.Data.Game, nil
 }
 
-// LeaderboardOfKnight 骑士榜
-func (client *Client) LeaderboardOfKnight() ([]Knight, error) {
-	buff, err := client.getToPica("comics/knight-leaderboard")
-	if err != nil {
-		panic(err)
-	}
-	var response LeaderboardOfKnightResponse
-	err = json.Unmarshal(buff, &response)
+func (client *Client) GameCommentsPage(gameId string, page int) (*GameCommentsPage, error) {
+	buff, err := client.getToPica("games/" + gameId + "/comments?page=" + strconv.Itoa(page))
 	if err != nil {
 		return nil, err
 	}
-	return response.Data.Users, nil
+	buff = fixJson(buff)
+	var commentsResponse GameCommentsResponse
+	err = json.Unmarshal(buff, &commentsResponse)
+	if err != nil {
+		return nil, err
+	}
+	return &commentsResponse.Data.Comments, nil
 }
 
 // 修复page

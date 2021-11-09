@@ -233,6 +233,25 @@ type ActionResponse struct {
 	} `json:"data"`
 }
 
+// CommentBase 评论
+type CommentBase struct {
+	Id            string      `json:"_id"`
+	Content       string      `json:"content"`
+	User          CommentUser `json:"_user"`
+	IsTop         bool        `json:"isTop"`
+	Hide          bool        `json:"hide"`
+	CreatedAt     time.Time   `json:"created_at"`
+	LikesCount    int         `json:"likesCount"`
+	CommentsCount int         `json:"commentsCount"`
+	IsLiked       bool        `json:"isLiked"`
+}
+
+// CommentUser 发出此评论的人
+type CommentUser struct {
+	UserBasic
+	Role string `json:"role"`
+}
+
 // CommentsResponse 获取漫画评论接口返回体
 type CommentsResponse struct {
 	Response
@@ -250,22 +269,8 @@ type CommentsPage struct {
 
 // Comment 漫画的评论
 type Comment struct {
-	Id            string      `json:"_id"`
-	Content       string      `json:"content"`
-	User          CommentUser `json:"_user"`
+	CommentBase
 	Comic         string      `json:"_comic"`
-	IsTop         bool        `json:"isTop"`
-	Hide          bool        `json:"hide"`
-	CreatedAt     time.Time   `json:"created_at"`
-	LikesCount    int         `json:"likesCount"`
-	CommentsCount int         `json:"commentsCount"`
-	IsLiked       bool        `json:"isLiked"`
-}
-
-// CommentUser 发出此评论的人
-type CommentUser struct {
-	UserBasic
-	Role string `json:"role"`
 }
 
 // CommentChildrenResponse 获取子评论接口返回体
@@ -315,6 +320,22 @@ type MyComment struct {
 	LikesCount    int       `json:"likesCount"`
 	CommentsCount int       `json:"commentsCount"`
 	IsLiked       bool      `json:"isLiked"`
+}
+
+// LeaderboardOfKnightResponse 骑士榜接口返回体
+type LeaderboardOfKnightResponse struct {
+	Response
+	Data struct {
+		Users []Knight `json:"users"`
+	} `json:"data"`
+}
+
+// Knight 用户(骑士榜)
+type Knight struct {
+	UserBasic
+	Role           string `json:"role"`
+	Character      string `json:"character"`
+	ComicsUploaded int    `json:"comicsUploaded"`
 }
 
 // HotKeywordsResponse 大家搜在搜接口返回体
@@ -378,19 +399,23 @@ type GameInfo struct {
 	UpdatedAt      time.Time `json:"updated_at"`
 	CreatedAt      time.Time `json:"created_at"`
 }
-
-// LeaderboardOfKnightResponse 骑士榜接口返回体
-type LeaderboardOfKnightResponse struct {
+// GameCommentsResponse 获取漫画评论接口返回体
+type GameCommentsResponse struct {
 	Response
 	Data struct {
-		Users []Knight `json:"users"`
+		Comments    GameCommentsPage `json:"comments"`
+		TopComments []Comment    `json:"topComments"`
 	} `json:"data"`
 }
 
-// Knight 用户(骑士榜)
-type Knight struct {
-	UserBasic
-	Role           string `json:"role"`
-	Character      string `json:"character"`
-	ComicsUploaded int    `json:"comicsUploaded"`
+// GameCommentsPage 游戏评论的分页
+type GameCommentsPage struct {
+	PageData
+	Docs []GameComment `json:"docs"`
+}
+
+// GameComment 游戏的评论
+type GameComment struct {
+	CommentBase
+	Game string `json:"_game"`
 }
