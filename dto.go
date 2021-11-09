@@ -246,6 +246,11 @@ type CommentBase struct {
 	IsLiked       bool        `json:"isLiked"`
 }
 
+// ChildOfComment 自评的字段
+type ChildOfComment struct {
+	Parent string `json:"_parent"`
+}
+
 // CommentUser 发出此评论的人
 type CommentUser struct {
 	UserBasic
@@ -270,7 +275,7 @@ type CommentsPage struct {
 // Comment 漫画的评论
 type Comment struct {
 	CommentBase
-	Comic         string      `json:"_comic"`
+	Comic string `json:"_comic"`
 }
 
 // CommentChildrenResponse 获取子评论接口返回体
@@ -290,7 +295,7 @@ type CommentChildrenPage struct {
 // CommentChild 子评论
 type CommentChild struct {
 	Comment
-	Parent string `json:"_parent"`
+	ChildOfComment
 }
 
 // MyCommentsPageResponse 我的评论接口返回体
@@ -399,12 +404,13 @@ type GameInfo struct {
 	UpdatedAt      time.Time `json:"updated_at"`
 	CreatedAt      time.Time `json:"created_at"`
 }
+
 // GameCommentsResponse 获取漫画评论接口返回体
 type GameCommentsResponse struct {
 	Response
 	Data struct {
 		Comments    GameCommentsPage `json:"comments"`
-		TopComments []Comment    `json:"topComments"`
+		TopComments []Comment        `json:"topComments"`
 	} `json:"data"`
 }
 
@@ -418,4 +424,24 @@ type GameCommentsPage struct {
 type GameComment struct {
 	CommentBase
 	Game string `json:"_game"`
+}
+
+// GameCommentChildrenResponse 获取游戏子评论接口返回体
+type GameCommentChildrenResponse struct {
+	Response
+	Data struct {
+		Comments GameCommentChildrenPage `json:"comments"`
+	} `json:"data"`
+}
+
+// GameCommentChildrenPage 游戏子评论分页
+type GameCommentChildrenPage struct {
+	PageData
+	Docs []GameCommentChild `json:"docs"`
+}
+
+// GameCommentChild 游戏子评论
+type GameCommentChild struct {
+	GameComment
+	ChildOfComment
 }

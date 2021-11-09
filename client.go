@@ -449,7 +449,7 @@ func (client *Client) CommentChildren(commentId string, page int) (*CommentChild
 	return &response.Data.Comments, nil
 }
 
-// PostChildComment 对漫画评论进行回复(子评论), 但是评论后无法删除
+// PostChildComment 对漫画/游戏的评论进行回复(子评论), 但是评论后无法删除
 func (client *Client) PostChildComment(commentId string, content string) error {
 	_, err := client.postToPica(fmt.Sprintf("comments/%s", commentId), map[string]string{
 		"content": content,
@@ -563,6 +563,21 @@ func (client *Client) PostGameComment(gameId string, content string) error {
 		"content": content,
 	})
 	return err
+}
+
+// GameCommentChildren 游戏评论的回复分页 (和漫画接口是同一个, 只有"_comic/_game"字段不一样)
+func (client *Client) GameCommentChildren(commentId string, page int) (*GameCommentChildrenPage, error) {
+	buff, err := client.getToPica(fmt.Sprintf("comments/%s/childrens?page=%d", commentId, page))
+	if err != nil {
+		return nil, err
+	}
+	buff = fixJson(buff)
+	var response GameCommentChildrenResponse
+	err = json.Unmarshal(buff, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response.Data.Comments, nil
 }
 
 // 修复page
