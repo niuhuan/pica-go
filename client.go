@@ -542,6 +542,7 @@ func (client *Client) GameInfo(gameId string) (*GameInfo, error) {
 	return &response.Data.Game, nil
 }
 
+// GameCommentsPage 游戏评论分页
 func (client *Client) GameCommentsPage(gameId string, page int) (*GameCommentsPage, error) {
 	buff, err := client.getToPica("games/" + gameId + "/comments?page=" + strconv.Itoa(page))
 	if err != nil {
@@ -554,6 +555,14 @@ func (client *Client) GameCommentsPage(gameId string, page int) (*GameCommentsPa
 		return nil, err
 	}
 	return &commentsResponse.Data.Comments, nil
+}
+
+// PostGameComment 对游戏进行评论, 但是评论后无法删除
+func (client *Client) PostGameComment(gameId string, content string) error {
+	_, err := client.postToPica(fmt.Sprintf("games/%s/comments", gameId), map[string]string{
+		"content": content,
+	})
+	return err
 }
 
 // 修复page
