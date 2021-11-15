@@ -30,7 +30,3 @@ func main(){
   comicsPage, err := client.Comics("", "", "", "", pica.SortDefault, 1)
 }
 ```
-
-## 其他语言
-
-- 请参考 [picacomic](https://github.com/AnkiKong/picacomic) 搭建自己的客户端
