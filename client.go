@@ -592,6 +592,16 @@ func (client *Client) GameCommentChildren(commentId string, page int) (*GameComm
 	return &response.Data.Comments, nil
 }
 
+// UpdatePassword 修改密码
+func (client *Client) UpdatePassword(oldPassword string, newPassword string) error {
+	body := map[string]string{
+		"old_password": oldPassword,
+		"new_password": newPassword,
+	}
+	_, err := client.putToPica("users/password", body)
+	return err
+}
+
 // UpdateAvatar 修改头像
 // 请压缩头像成正方形, 并尽量减少图片体积, 编码必须为JPEG
 func (client *Client) UpdateAvatar(jpegBytes []byte) error {
