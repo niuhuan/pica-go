@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/niuhuan/pica-go"
+	"io/ioutil"
 	"net"
 	"net/http"
 	"net/url"
@@ -154,4 +155,18 @@ func ExampleSearchComics(client *pica.Client) {
 	}
 	buff, _ := json.Marshal(comicPage)
 	println(string(buff))
+}
+
+// ExampleUpdateAvatar (需要登录)
+// 修改头像
+func ExampleUpdateAvatar(client *pica.Client) {
+	buff, err := ioutil.ReadFile("1.jpg")
+	if err != nil {
+		panic(err)
+	}
+	err = client.UpdateAvatar(buff)
+	if err != nil {
+		panic(err)
+	}
+	println("OK")
 }

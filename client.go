@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"crypto/hmac"
 	"crypto/sha256"
+	"encoding/base64"
 	"encoding/hex"
 	"errors"
 	"fmt"
@@ -71,19 +72,19 @@ func (client *Client) header(req *http.Request) {
 	}
 }
 
-// 向哔咔发送POST请求
-func (client *Client) postToPica(path string, body interface{}) ([]byte, error) {
+// postToPica 向哔咔发送请求
+func (client *Client) bodyRequestToPica(method string, path string, body interface{}) ([]byte, error) {
 	var req *http.Request
 	var err error
 	if body == nil {
-		req, err = http.NewRequest("POST", server+path, nil)
+		req, err = http.NewRequest(method, server+path, nil)
 	} else {
 		bodyBuff, err := json.Marshal(body)
 		if err != nil {
 			return nil, err
 		}
 		bodyStream := bytes.NewBuffer(bodyBuff)
-		req, err = http.NewRequest("POST", server+path, bodyStream)
+		req, err = http.NewRequest(method, server+path, bodyStream)
 	}
 	if err != nil {
 		return nil, err
@@ -92,7 +93,17 @@ func (client *Client) postToPica(path string, body interface{}) ([]byte, error) 
 	return client.responseFromPica(req)
 }
 
-// 向哔咔发送GET请求
+// postToPica 向哔咔发送POST请求
+func (client *Client) postToPica(path string, body interface{}) ([]byte, error) {
+	return client.bodyRequestToPica("POST", path, body)
+}
+
+// putToPica 向哔咔发送PUT请求
+func (client *Client) putToPica(path string, body interface{}) ([]byte, error) {
+	return client.bodyRequestToPica("PUT", path, body)
+}
+
+// getToPica 向哔咔发送GET请求
 func (client *Client) getToPica(path string) ([]byte, error) {
 	req, err := http.NewRequest("GET", server+path, nil)
 	if err != nil {
@@ -102,7 +113,7 @@ func (client *Client) getToPica(path string) ([]byte, error) {
 	return client.responseFromPica(req)
 }
 
-// 向哔咔发送GET请求, 并修改 "image-quality" 请求头
+// getToPicaWithQuality 向哔咔发送GET请求, 并修改 "image-quality" 请求头
 func (client *Client) getToPicaWithQuality(path string, quality string) ([]byte, error) {
 	req, err := http.NewRequest("GET", server+path, nil)
 	if err != nil {
@@ -113,7 +124,7 @@ func (client *Client) getToPicaWithQuality(path string, quality string) ([]byte,
 	return client.responseFromPica(req)
 }
 
-// 从哔咔接口返回体, 并解析异常信息
+// responseFromPica 从哔咔接口返回体, 并解析异常信息
 func (client *Client) responseFromPica(req *http.Request) ([]byte, error) {
 	resp, err := client.Do(req)
 	if err != nil {
@@ -579,4 +590,14 @@ func (client *Client) GameCommentChildren(commentId string, page int) (*GameComm
 		return nil, err
 	}
 	return &response.Data.Comments, nil
+}
+
+// UpdateAvatar 修改头像
+// 请压缩头像成正方形, 并尽量减少图片体积, 编码必须为JPEG
+func (client *Client) UpdateAvatar(jpegBytes []byte) error {
+	body := map[string]string{
+		"avatar": "data:image/jpeg;base64," + base64.StdEncoding.EncodeToString(jpegBytes),
+	}
+	_, err := client.putToPica("users/avatar", body)
+	return err
 }
