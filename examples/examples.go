@@ -170,3 +170,12 @@ func ExampleUpdateAvatar(client *pica.Client) {
 	}
 	println("OK")
 }
+
+// ExampleUpdateSlogan 修改签名
+func ExampleUpdateSlogan(client *pica.Client) {
+	err := client.UpdateSlogan("buff")
+	if err != nil {
+		panic(err)
+	}
+	println("OK")
+}

@@ -602,6 +602,15 @@ func (client *Client) UpdatePassword(oldPassword string, newPassword string) err
 	return err
 }
 
+// UpdateSlogan 修改签名
+func (client *Client) UpdateSlogan(slogan string) error {
+	body := map[string]string{
+		"slogan": slogan,
+	}
+	_, err := client.putToPica("users/profile", body)
+	return err
+}
+
 // UpdateAvatar 修改头像
 // 请压缩头像成正方形, 并尽量减少图片体积, 编码必须为JPEG
 func (client *Client) UpdateAvatar(jpegBytes []byte) error {
