@@ -51,6 +51,7 @@ type UserBasic struct {
 	Level      int      `json:"level"`
 	Characters []string `json:"characters"`
 	Avatar     Image    `json:"avatar"`
+	Slogan     string   `json:"slogan"` // 有可能是null, 从未设置过slogan的人
 }
 
 // LoginRequest 登录的请求体 (PS:Email字段为账号, 并不一定是邮箱格式)
@@ -178,7 +179,6 @@ type ComicInfo struct {
 // Creator 漫画的创建人
 type Creator struct {
 	UserBasic
-	Slogan    string `json:"slogan"`
 	Role      string `json:"role"`
 	Character string `json:"character"`
 }
