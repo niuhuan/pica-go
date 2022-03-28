@@ -2,20 +2,22 @@ package pica
 
 // 排序方式
 
-const SortDefault = "ua"
-const SortTimeNewest = "dd"
-const SortTimeOldest = "da"
-const SortLikeMost = "ld"
-const SortViveMost = "vd"
+type Sort string
 
+const SortDefault Sort = "ua"
+const SortTimeNewest Sort = "dd"
+const SortTimeOldest Sort = "da"
+const SortLikeMost Sort = "ld"
+const SortViveMost Sort = "vd"
 
 // 图片质量
 
-const ImageQualityOriginal = "original"
-const ImageQualityLow = "low"
-const ImageQualityMedium = "medium"
-const ImageQualityHigh = "high"
+type ImageQuality string
 
+const ImageQualityOriginal ImageQuality = "original"
+const ImageQualityLow ImageQuality = "low"
+const ImageQualityMedium ImageQuality = "medium"
+const ImageQualityHigh ImageQuality = "high"
 
 // 一些请求结果
 
@@ -24,7 +26,6 @@ const ActionUnlike = "unlike"
 
 const ActionFavourite = "favourite"
 const ActionUnFavourite = "un_favourite"
-
 
 // 排行榜类型
 
