@@ -390,3 +390,17 @@ type GameCommentChild struct {
 	GameComment
 	ChildOfComment
 }
+
+// CollectionsResponse 合集返回体
+type CollectionsResponse struct {
+	Response
+	Data struct {
+		Collections []Collection `json:"collections"`
+	} `json:"data"`
+}
+
+// Collection 合集
+type Collection struct {
+	Title  string        `json:"title"`
+	Comics []ComicSimple `json:"comics"`
+}
