@@ -508,7 +508,7 @@ func (client *Client) HotKeywords() ([]string, error) {
 func (client *Client) LeaderboardOfKnight() ([]Knight, error) {
 	req, err := client.getToPica("comics/knight-leaderboard")
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	response, err := responseFromPica[LeaderboardOfKnightResult](client, req)
 	if err != nil {
@@ -625,7 +625,7 @@ func (client *Client) UpdateAvatar(jpegBytes []byte) error {
 func (client *Client) Collections() ([]Collection, error) {
 	buff, err := client.getToPica("collections")
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	var response CollectionsResponse
 	err = json.Unmarshal(buff, &response)
