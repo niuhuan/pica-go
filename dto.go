@@ -391,12 +391,9 @@ type GameCommentChild struct {
 	ChildOfComment
 }
 
-// CollectionsResponse 合集返回体
-type CollectionsResponse struct {
-	Response
-	Data struct {
-		Collections []Collection `json:"collections"`
-	} `json:"data"`
+// CollectionsResult 合集返回体
+type CollectionsResult struct {
+	Collections []Collection `json:"collections"`
 }
 
 // Collection 合集

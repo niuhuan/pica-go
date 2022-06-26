@@ -623,12 +623,11 @@ func (client *Client) UpdateAvatar(jpegBytes []byte) error {
 }
 
 func (client *Client) Collections() ([]Collection, error) {
-	buff, err := client.getToPica("collections")
+	req, err := client.getToPica("collections")
 	if err != nil {
 		return nil, err
 	}
-	var response CollectionsResponse
-	err = json.Unmarshal(buff, &response)
+	response, err := responseFromPica[CollectionsResult](client, req)
 	if err != nil {
 		return nil, err
 	}
