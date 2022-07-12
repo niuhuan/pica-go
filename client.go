@@ -635,10 +635,12 @@ func (client *Client) Collections() ([]Collection, error) {
 }
 
 func (client *Client) InitInfo() (*InitInfo, error) {
-	rsp, err := client.Get("http://68.183.234.72/init")
+	req, err := http.NewRequest("GET", "http://68.183.234.72/init", nil)
 	if err != nil {
 		return nil, err
 	}
+	client.header(req)
+	rsp, err := client.Do(req)
 	defer rsp.Body.Close()
 	buff, err := ioutil.ReadAll(rsp.Body)
 	if err != nil {
