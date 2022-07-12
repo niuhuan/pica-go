@@ -459,3 +459,10 @@ type Collection struct {
 	Title  string        `json:"title"`
 	Comics []ComicSimple `json:"comics"`
 }
+
+type InitInfo struct {
+	Status    string   `json:"status"`
+	Addresses []string `json:"addresses"`
+	Waka      string   `json:"waka"`
+	AdKeyword string   `json:"adKeyword"`
+}

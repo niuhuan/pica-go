@@ -633,3 +633,21 @@ func (client *Client) Collections() ([]Collection, error) {
 	}
 	return response.Data.Collections, nil
 }
+
+func (client *Client) InitInfo() (*InitInfo, error) {
+	rsp, err := client.Get("http://68.183.234.72/init")
+	if err != nil {
+		return nil, err
+	}
+	defer rsp.Body.Close()
+	buff, err := ioutil.ReadAll(rsp.Body)
+	if err != nil {
+		return nil, err
+	}
+	var initInfo InitInfo
+	err = json.Unmarshal(buff, &initInfo)
+	if err != nil {
+		return nil, err
+	}
+	return &initInfo, nil
+}
