@@ -633,3 +633,57 @@ func (client *Client) Collections() ([]Collection, error) {
 	}
 	return response.Data.Collections, nil
 }
+
+// ForgotPassword 找回密码, 获取用户问题
+func (client *Client) ForgotPassword(email string) (*ForgotPasswordResult, error) {
+	buff, err := client.postToPica("auth/forgot-password", map[string]string{
+		"email": email,
+	})
+	if err != nil {
+		return nil, err
+	}
+	var response ForgotPasswordResponse
+	err = json.Unmarshal(buff, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response.Data, nil
+}
+
+// ResetPassword 找回密码, 根据问题重置密码
+func (client *Client) ResetPassword(email string, questionNo int, answer string) (*ResetPasswordResult, error) {
+	buff, err := client.postToPica("auth/reset-password", map[string]interface{}{
+		"email":      email,
+		"questionNo": questionNo,
+		"answer":     answer,
+	})
+	if err != nil {
+		return nil, err
+	}
+	var response ResetPasswordResponse
+	err = json.Unmarshal(buff, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response.Data, nil
+}
+
+func (client *Client) InitInfo() (*InitInfo, error) {
+	req, err := http.NewRequest("GET", "http://68.183.234.72/init", nil)
+	if err != nil {
+		return nil, err
+	}
+	client.header(req)
+	rsp, err := client.Do(req)
+	defer rsp.Body.Close()
+	buff, err := ioutil.ReadAll(rsp.Body)
+	if err != nil {
+		return nil, err
+	}
+	var initInfo InitInfo
+	err = json.Unmarshal(buff, &initInfo)
+	if err != nil {
+		return nil, err
+	}
+	return &initInfo, nil
+}
