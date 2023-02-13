@@ -636,14 +636,13 @@ func (client *Client) Collections() ([]Collection, error) {
 
 // ForgotPassword 找回密码, 获取用户问题
 func (client *Client) ForgotPassword(email string) (*ForgotPasswordResult, error) {
-	buff, err := client.postToPica("auth/forgot-password", map[string]string{
+	req, err := client.postToPica("auth/forgot-password", map[string]string{
 		"email": email,
 	})
 	if err != nil {
 		return nil, err
 	}
-	var response ForgotPasswordResponse
-	err = json.Unmarshal(buff, &response)
+	response, err := responseFromPica[ForgotPasswordResult](client, req)
 	if err != nil {
 		return nil, err
 	}
@@ -652,7 +651,7 @@ func (client *Client) ForgotPassword(email string) (*ForgotPasswordResult, error
 
 // ResetPassword 找回密码, 根据问题重置密码
 func (client *Client) ResetPassword(email string, questionNo int, answer string) (*ResetPasswordResult, error) {
-	buff, err := client.postToPica("auth/reset-password", map[string]interface{}{
+	req, err := client.postToPica("auth/reset-password", map[string]interface{}{
 		"email":      email,
 		"questionNo": questionNo,
 		"answer":     answer,
@@ -660,8 +659,7 @@ func (client *Client) ResetPassword(email string, questionNo int, answer string)
 	if err != nil {
 		return nil, err
 	}
-	var response ResetPasswordResponse
-	err = json.Unmarshal(buff, &response)
+	response, err := responseFromPica[ResetPasswordResult](client, req)
 	if err != nil {
 		return nil, err
 	}

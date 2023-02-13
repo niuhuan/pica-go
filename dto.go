@@ -409,21 +409,9 @@ type ForgotPasswordResult struct {
 	Question3 string `json:"question3"`
 }
 
-// ForgotPasswordResponse 找回密码-获取问题-返回
-type ForgotPasswordResponse struct {
-	Response
-	Data ForgotPasswordResult `json:"data"`
-}
-
 // ResetPasswordResult 找回密码-根据答案重置密码
 type ResetPasswordResult struct {
 	Password string `json:"password"`
-}
-
-// ResetPasswordResponse 找回密码-获取问题-返回
-type ResetPasswordResponse struct {
-	Response
-	Data ResetPasswordResult `json:"data"`
 }
 
 type InitInfo struct {
