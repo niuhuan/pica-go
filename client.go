@@ -214,13 +214,16 @@ func (client *Client) Categories() ([]Category, error) {
 
 // Comics 分类下的漫画
 // category 为空字符串则为所有分类
-func (client *Client) Comics(category string, tag string, creatorId string, chineseTeam string, sort string, page int) (*ComicsPage, error) {
+func (client *Client) Comics(category string, tag string, author string, creatorId string, chineseTeam string, sort string, page int) (*ComicsPage, error) {
 	mUrl := "comics?"
 	if len(category) > 0 {
 		mUrl = mUrl + fmt.Sprintf("c=%s&", url.QueryEscape(category))
 	}
 	if len(tag) > 0 {
 		mUrl = mUrl + fmt.Sprintf("t=%s&", url.QueryEscape(tag))
+	}
+	if len(author) > 0 {
+		mUrl = mUrl + fmt.Sprintf("a=%s&", url.QueryEscape(author))
 	}
 	if len(creatorId) > 0 {
 		mUrl = mUrl + fmt.Sprintf("ca=%s&", creatorId)
